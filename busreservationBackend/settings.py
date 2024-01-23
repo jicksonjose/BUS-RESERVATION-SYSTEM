@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'users',
     'bus',
     'main',
+    'rest_framework',
 
 ]
 

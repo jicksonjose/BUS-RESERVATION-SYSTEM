@@ -8,7 +8,7 @@ class BusDocument(BaseModel):
     owner_ID = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.busowner.first_name} {self.busowner.last_name}"
+        return self.busowner.name
     
 class BusDetails(BaseModel):
     busowner = models.ForeignKey(BusOwner, on_delete=models.CASCADE, null=True , related_name='bus_details',  db_column='busowner_id')
