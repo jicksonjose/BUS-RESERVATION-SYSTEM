@@ -24,4 +24,9 @@ class BusPointAdmin(admin.ModelAdmin):
     ordering = ['created_at',]
 admin.site.register(BusPoints, BusPointAdmin)
 
+class BusNumberAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'busowner','busnumber' )
+
+admin.site.register(BusNumber, BusNumberAdmin)
+
 

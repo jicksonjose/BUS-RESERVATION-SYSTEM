@@ -78,55 +78,68 @@ def signup(request):
 
 
 
-@api_view(["POST"])
+# @api_view(["POST"])
+# def login(request):
+#     try:
+#         serializer = LoginSerializers(data=request.data)
+        
+#         if serializer.is_valid():
+#             email = serializer.validated_data.get("email")
+#             password = serializer.validated_data.get("password")
+
+#             try:
+#                 user = BusOwner.objects.get(email=email, password=password)
+#                 # Authentication successful
+#                 response_data = {
+#                     "StatusCode": 6000,
+#                     "data": {
+#                         "message": "Login successful",
+#                         "user_id": user.id
+#                     }
+#                 }
+#             except BusOwner.DoesNotExist:
+#                 # User not found
+#                 response_data = {
+#                     "StatusCode": 6001,
+#                     "data": {
+#                         "message": "Invalid credentials"
+#                     }
+#                 }
+#         else:
+#             # Invalid serializer data
+#             response_data = {
+#                 "StatusCode": 6001,
+#                 "data": {
+#                     "message": "Invalid credentials"
+#                 }
+#             }
+
+#     except Exception as e:
+#         # Handle other exceptions
+#         errType = e.__class__.__name__
+#         errors = {
+#             errType: traceback.format_exc()
+#         }
+#         response_data = {
+#             "status": 0,
+#             "api": request.get_full_path(),
+#             "request": request.data,
+#             "message": str(e),
+#             "response": errors
+#         }
+
+#     # Return the response after the try-except block
+#     return Response({'app_data': response_data}, status=status.HTTP_200_OK)
+
+@csrf_exempt
 def login(request):
-    try:
-        transaction.set_autocommit(False)
-        serializer = LoginSerializers(data=request.data)
+    if request.method == 'POST':
 
-        if serializer.is_valid():
-            email = request.data["email"]
-            password = request.data["password"]
-
-            user = BusOwner.objects.filter(email=email, password=password).first()
-
-            if user is not None:
-                # User is authenticated, you can add additional logic here if needed
-                response_data = {
-                    "StatusCode": 6000,
-                    "data": {
-                        "message": "Login successful",
-                        "user_id": user.id  # You can customize the response based on your needs
-                    }
-                }
-            else:
-                response_data = {
-                    "StatusCode": 6001,
-                    "data": {
-                        "message": "Invalid credentials"
-                    }
-                }
-        else:
-            response_data = {
-                "StatusCode": 6001,
-                "data": {
-                    "message": "Invalid credentials"
-                }
-            }
-
-    except Exception as e:
-        transaction.rollback()
-        errType = e.__class__.__name__
-        errors = {
-            errType: traceback.format_exc()
-        }
-        response_data = {
-            "status": 0,
-            "api": request.get_full_path(),
-            "request": request.data,
-            "message": str(e),
-            "response": errors
-        }
-
-    # Return the response after the try-except block
-    return Response({'app_data': response_data}, status=status.HTTP_200_OK)
+        receieved_data = json.loads(request.body)
+        print(receieved_data)
+        getemail = receieved_data["email"]
+        getpassword = receieved_data["password"]
+        data = list(BusOwner.objects.filter(Q(email__exact=getemail) & Q(password__exact=getpassword)).values())
+        return HttpResponse(json.dumps(data)) 
+    else:
+        return HttpResponse(json.dumps({"status": "login details Invalid"}))  

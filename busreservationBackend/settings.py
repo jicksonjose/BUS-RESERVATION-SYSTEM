@@ -31,9 +31,12 @@ INSTALLED_APPS = [
     'bus',
     'main',
     'rest_framework',
+    'corsheaders'
 
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Add the origin of your React app
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -42,6 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'busreservationBackend.urls'

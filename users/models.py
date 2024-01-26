@@ -1,7 +1,7 @@
 from django.db import models
 from main.models import BaseModel
 
-class BusOwner(BaseModel):
+class BusOwner(models.Model):
     name = models.CharField(max_length=100)
     phone = models.IntegerField()
     email = models.CharField(max_length=100)

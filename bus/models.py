@@ -6,19 +6,29 @@ class BusDocument(BaseModel):
     busowner = models.ForeignKey(BusOwner, on_delete=models.CASCADE, null=True , related_name='bus_doc',  db_column='bus_doc_id')
     busRc = models.CharField(max_length=100)
     owner_ID = models.CharField(max_length=100)
+    is_verified =  models.BooleanField(default=False)
 
     def __str__(self):
         return self.busowner.name
     
-class BusDetails(BaseModel):
+
+class BusNumber(models.Model):
+    busowner = models.ForeignKey(BusOwner, on_delete=models.CASCADE, null=True , related_name='bus_number_details',  db_column='bus_number')
+    busnumber = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.busnumber
+
+class BusDetails(models.Model):
     busowner = models.ForeignKey(BusOwner, on_delete=models.CASCADE, null=True , related_name='bus_details',  db_column='busowner_id')
     busname = models.CharField(max_length=100)
     thumbnail = models.CharField(max_length=100)
-    busnumber = models.CharField(max_length=100)
+    busnumber = models.ForeignKey(BusNumber, on_delete=models.CASCADE, null=True , related_name='bus_number',  db_column='bus_num_id')
     seats = models.IntegerField(default=0)
 
     def __str__(self):
         return self.busname 
+    
 
 class BusFeature(BaseModel):
     bus = models.ForeignKey(BusDetails, on_delete=models.CASCADE, null=True, related_name='bus_features')
