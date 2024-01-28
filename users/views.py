@@ -16,6 +16,8 @@ import traceback
 from django.db.models import Case, When, Value, IntegerField
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime, timedelta
+from django.http import JsonResponse
+
 
 
 
@@ -24,112 +26,66 @@ from datetime import datetime, timedelta
 @csrf_exempt
 @api_view(["POST"])
 def signup(request):
+    if request.method == 'POST':
+        try:
+            received_data = json.loads(request.body)
+            print("Received data:", received_data)
+
+            # Check if the email already exists
+            if BusOwner.objects.filter(email=received_data['email']).exists():
+                print("Email already exists")
+                return JsonResponse({"status": "error", "message": "Email already exists"}, status=400)
+
+            # Check if the phone number already exists
+            if BusOwner.objects.filter(phone=received_data['phone']).exists():
+                print("Phone number already exists")
+                return JsonResponse({"status": "error", "message": "Phone number already exists"}, status=400)
+
+            serializer = BusOwnerSignupSerializers(data=received_data)
+            print("Serialized data:", serializer)
+
+            if serializer.is_valid():
+                serializer.save()
+                print("Account added successfully")
+                return JsonResponse({"status": "added"})
+            else:
+                print("Serializer errors:", serializer.errors)
+                return JsonResponse({"status": "error", "errors": serializer.errors}, status=400)
+
+        except json.JSONDecodeError as e:
+            print("Invalid JSON format in request body")
+            return JsonResponse({"status": "error", "message": "Invalid JSON format in request body"}, status=400)
+
+    print("Invalid request method")
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=400)
+
+
+@api_view(['GET'])
+def get_email(request, email):
     try:
-        transaction.set_autocommit(False)
-        serialized = SignupSerializers(data=request.data)
-        if serialized.is_valid():
-            name = request.data["name"]
-            email = request.data["email"]
-            phone = request.data["phone"]
-            password = request.data["password"]
-            if BusOwner.objects.filter(email=email).exists():
-                response_data={
-                    "StatusCode":6001,
-                    "data":"email already exists"
-                }
-            elif BusOwner.objects.filter(phone=phone).exists():
-                response_data = {
-                    "StatusCode": 6001,
-                    "data": "Phone number already exists"
-                }
-            else:  
-                owner= BusOwner.objects.create(
-                    name = name,
-                    email = email,
-                    phone = phone,
-                    password = password,
-                ) 
-                transaction.commit()
-                response_data = {
-                    "StatusCode":6000,
-                    "data":{
-                        "message":f"{owner.name} created succesfully"
-                    }
-                }         
-        else:
-            response_data = {
-                    "StatusCode": 6001,
-                    "data": serialized._errors
-                }
+        print("API Endpoint Hit!")
+        check_email = BusOwner.objects.filter(email=email).exists()
+        response_data = {'exists': check_email}
+        print("check_email:", response_data)
+        return JsonResponse(response_data)
     except Exception as e:
-        transaction.rollback()
-        errType = e.__class__.__name__
-        errors = {
-            errType: traceback.format_exc()
-        }
-        response_data = {
-            "status": 0,
-            "api": request.get_full_path(),
-            "request": request.data,
-            "message": str(e),
-            "response": errors
-        }
-    return Response({'app_data': response_data}, status=status.HTTP_200_OK)
+        print("Error:", str(e))
+        return JsonResponse({'error': str(e)}, status=500)
 
+def check_phone(request, phone):
+    try:
+        # Convert the phone parameter to an integer (assuming it's a numeric phone number)
+        phone = int(phone)
+    except ValueError:
+        return JsonResponse({"exists": False, "message": "Invalid phone number format"})
 
+    # Your logic to check if the phone number exists
+    # Example: You can use BusOwner.objects.filter(phone=phone).exists()
+    phone_exists = BusOwner.objects.filter(phone=phone).exists()
 
-# @api_view(["POST"])
-# def login(request):
-#     try:
-#         serializer = LoginSerializers(data=request.data)
-        
-#         if serializer.is_valid():
-#             email = serializer.validated_data.get("email")
-#             password = serializer.validated_data.get("password")
+    # Return a JSON response indicating whether the phone number exists
+    return JsonResponse({"exists": phone_exists})
 
-#             try:
-#                 user = BusOwner.objects.get(email=email, password=password)
-#                 # Authentication successful
-#                 response_data = {
-#                     "StatusCode": 6000,
-#                     "data": {
-#                         "message": "Login successful",
-#                         "user_id": user.id
-#                     }
-#                 }
-#             except BusOwner.DoesNotExist:
-#                 # User not found
-#                 response_data = {
-#                     "StatusCode": 6001,
-#                     "data": {
-#                         "message": "Invalid credentials"
-#                     }
-#                 }
-#         else:
-#             # Invalid serializer data
-#             response_data = {
-#                 "StatusCode": 6001,
-#                 "data": {
-#                     "message": "Invalid credentials"
-#                 }
-#             }
-
-#     except Exception as e:
-#         # Handle other exceptions
-#         errType = e.__class__.__name__
-#         errors = {
-#             errType: traceback.format_exc()
-#         }
-#         response_data = {
-#             "status": 0,
-#             "api": request.get_full_path(),
-#             "request": request.data,
-#             "message": str(e),
-#             "response": errors
-#         }
-
-#     # Return the response after the try-except block
-#     return Response({'app_data': response_data}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def login(request):

@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from users.models import *
+from bus.models import *
 
 
-class SignupSerializers(serializers.Serializer):
-    name = serializers.CharField()
-    phone = serializers.CharField()
-    email = serializers.CharField() 
-    password = serializers.CharField() 
+class BusOwnerSignupSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = BusOwner
+        fields = ['name', 'email', 'phone', 'password']
+
 
 
 class LoginSerializers(serializers.Serializer):
