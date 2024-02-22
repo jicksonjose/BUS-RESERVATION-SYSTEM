@@ -5,8 +5,8 @@ from bus.models import *
 
 class BusOwnerSignupSerializers(serializers.ModelSerializer):
     class Meta:
-        model = BusOwner
-        fields = ['name', 'email', 'phone', 'password']
+        model = Otp
+        fields = ['name', 'email', 'otp']
 
 
 

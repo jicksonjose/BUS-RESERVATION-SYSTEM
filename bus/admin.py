@@ -3,30 +3,27 @@ from .models import *
 
 
 class BusDocumentsAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'busowner', 'busRc', 'owner_ID')
-admin.site.register(BusDocument, BusDocumentsAdmin)
+    list_display = ('pk','busname', 'busowner', 'busrc', 'registration_number','thumbnail','ac_nonac', 'wifi','food','drink', 'is_verified')
+admin.site.register(BusDetails, BusDocumentsAdmin)
 
-class BusDetailsAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'busowner', 'busname', 'thumbnail', 'busnumber', 'seats')
-admin.site.register(BusDetails, BusDetailsAdmin)
-
-class BusFeatureAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'bus', 'title', 'description')
-admin.site.register(BusFeature, BusFeatureAdmin)
 
 class BusRouteAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'bus', 'source','destination', 'price')
-admin.site.register(BusRoutes, BusRouteAdmin)
+    list_display = ('pk', 'bus', 'start','destination', 'starting_time','destination_time')
+admin.site.register(BusRoute, BusRouteAdmin)
 
+class BusScheduleAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'bus', 'route','date')
+admin.site.register(BusSchedule, BusScheduleAdmin)
 
-class BusPointAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'route','starting_point',  'destination_point', 'price' )
-    ordering = ['created_at',]
-admin.site.register(BusPoints, BusPointAdmin)
+class BusPointsAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'route', 'stop_name','stop_order','arrival_time', 'price' )
+admin.site.register(BusPoints, BusPointsAdmin)
 
-class BusNumberAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'busowner','busnumber' )
+class BusStaffAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'first_name', 'last_name','phone','type')
+admin.site.register(BusStaff, BusStaffAdmin)
 
-admin.site.register(BusNumber, BusNumberAdmin)
-
+class BusStaffScheduleAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'staff', 'bus_schedule')
+admin.site.register(BusStaffSchedule, BusStaffScheduleAdmin)
 

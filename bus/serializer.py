@@ -2,15 +2,22 @@ from rest_framework import serializers
 from  .models import *
 
 
-class BusDocumentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BusDocument
-        fields = ['busowner', 'busRc', 'owner_ID']
 
-
-class BusDetailsSerializer(serializers.ModelSerializer):
-    busnumber = serializers.PrimaryKeyRelatedField(allow_null=True, queryset=BusNumber.objects.all(), required=False)
+class BusDetailSerializer(serializers.ModelSerializer):
+    # Define fields including the file field
+    busrc = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=True)
+    thumbnail = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=True)
 
     class Meta:
         model = BusDetails
-        fields = ['busowner', 'busname', 'thumbnail', 'busnumber', 'seats']
+        fields = ['busowner', 'busname', 'busrc', 'registration_number', 'thumbnail', 'ac_nonac', 'wifi', 'food', 'drink']
+
+class BusDetailListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BusDetails
+        fields = '__all__'
+
+class BusRouteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BusRoute
+        fields = '__all__'
