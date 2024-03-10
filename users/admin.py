@@ -11,7 +11,7 @@ class OtpAdmin(admin.ModelAdmin):
 admin.site.register(Otp, OtpAdmin)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('pk','first_name', 'last_name', 'phone', 'email', 'password')
+    list_display = ('pk','first_name', 'last_name', 'phone', 'email', 'password','refferalcode','refferalcode_status')
 admin.site.register(UserProfile, UserProfileAdmin)
 
 

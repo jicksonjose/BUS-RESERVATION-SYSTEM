@@ -12,7 +12,7 @@ class BusRouteAdmin(admin.ModelAdmin):
 admin.site.register(BusRoute, BusRouteAdmin)
 
 class BusScheduleAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'bus', 'route','date')
+    list_display = ('pk', 'route','date', 'status')
 admin.site.register(BusSchedule, BusScheduleAdmin)
 
 class BusPointsAdmin(admin.ModelAdmin):
@@ -20,7 +20,7 @@ class BusPointsAdmin(admin.ModelAdmin):
 admin.site.register(BusPoints, BusPointsAdmin)
 
 class BusStaffAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'first_name', 'last_name','phone','type')
+    list_display = ('pk','busowner' ,'first_name', 'last_name','phone','type')
 admin.site.register(BusStaff, BusStaffAdmin)
 
 class BusStaffScheduleAdmin(admin.ModelAdmin):

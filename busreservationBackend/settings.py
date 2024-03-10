@@ -130,3 +130,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Set the maximum size (in bytes) that a request body can have before it gets streamed to disk.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10  # 10 MB (adjust size as needed)
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'jicksonj49@gmail.com'
+EMAIL_HOST_PASSWORD = 'dvxv pmrn nqmh feql'

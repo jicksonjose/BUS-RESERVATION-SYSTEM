@@ -2,7 +2,7 @@ from django.contrib import admin
 from . models import *
 
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user','buspoint' , 'date', 'total', 'payment_status', 'referral_code_used', 'referred_user')
+    list_display = ('pk', 'user' ,'pickup','dropoff', 'date', 'total', 'payment_status', 'referral_code_used', 'referred_user')
 admin.site.register(BusReservation, ReservationAdmin)
 
 class ReservationDetailsAdmin(admin.ModelAdmin):

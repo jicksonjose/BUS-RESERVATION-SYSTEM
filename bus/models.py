@@ -30,18 +30,25 @@ class BusRoute(BaseModel):
     destination = models.CharField(max_length=100)
     starting_time =  models.CharField(max_length=100)
     destination_time = models.CharField(max_length=100)
-
     def __str__(self):
         return f"{self.start} to {self.destination}"
 
     
-class BusSchedule(BaseModel):
-    bus = models.ForeignKey(BusDetails, on_delete=models.CASCADE, null=True , related_name='bus')
+class BusSchedule(BaseModel): 
+
+    ACTIVE = 'active'
+    INACTIVE = 'In-active'
+    TYPE_CHOICES = [
+        (ACTIVE, 'active'),
+        (INACTIVE, 'In-active'),
+    ]
+    
     route = models.ForeignKey(BusRoute, on_delete=models.CASCADE, null=True , related_name='route')
     date = models.CharField(max_length=100)
+    status = models.CharField(max_length=100,choices=TYPE_CHOICES, default=ACTIVE)
 
     def __str__(self):
-        return f"{self.bus} - {self.route}"
+        return f"{self.route}"
 
 
 class BusPoints(BaseModel):
@@ -64,7 +71,7 @@ class BusStaff(models.Model):
         (DRIVER, 'Driver'),
         (STAFF, 'Staff'),
     ]
-
+    busowner = models.ForeignKey(BusOwner, on_delete=models.CASCADE, null=True , related_name='bus_detail',  db_column='busowner')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
